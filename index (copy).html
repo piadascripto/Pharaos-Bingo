@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Pyramid of Squares and Bingo Numbers</title>
+	
+	<style>
+
+		.row {
+			text-align: center
+		}
+
+		button {
+			height: 80px;
+			font-size: 20px;
+			padding: 5 10 5 10px;
+			margin: 5px;
+		}
+
+		.bingoNumbers {
+			text-align: center;
+		}
+
+
+		.square {
+			width: 50px;
+			height: 50px;
+			background-color: yellow;
+			font-size: 20px;
+			color: black;
+			border: 1px solid black;
+			display: inline-block;
+			text-align: center;
+			vertical-align: middle;
+			padding: 25px 20px 0px 20px;
+			margin: 2px;
+		}
+
+
+		.circle {
+			width: 50px;
+			height: 50px;
+			background-color: lightblue;
+			border-radius: 50%;
+			display: inline-block;
+			text-align: center;
+			vertical-align: middle;
+			margin: 5px;
+			font-size: 20px;
+			padding: 25px 15px 0px 15px;
+			color: black;
+
+		}
+	</style>
+
+
+
+</head>
+
+<body>
+	<div>
+		<h1>Pyramid of Squares and Bingo Numbers</h1>
+		<<button id="playAgain" onclick="playAgain()" hidden>Play Again!</button>
+
+
+		<button id="generatePyramidButton" onclick="generatePyramid()">Generate your pyramid!</button>
+		<div id="pyramid">
+
+			<div class="row">
+				<div class="square" id="1"></div>
+			</div>
+
+			<div class="row">
+				<div class="square" id="2"></div>
+				<div class="square" id="3"></div>
+			</div>
+
+			<div class="row">
+				<div class="square" id="4"></div>
+				<div class="square" id="5"></div>
+				<div class="square" id="6"></div>
+			</div>
+
+			<div class="row">
+				<div class="square" id="7"></div>
+				<div class="square" id="8"></div>
+				<div class="square" id="9"></div>
+				<div class="square" id="10"></div>
+			</div>
+
+			<div class="row">
+				<div class="square" id="11"></div>
+				<div class="square" id="12"></div>
+				<div class="square" id="13"></div>
+				<div class="square" id="14"></div>
+				<div class="square" id="15"></div>
+			</div>
+
+
+		</div>
+<button id="generateBingoButton" onclick="generateBingo()" hidden>Play!</button>
+		<div id="bingoNumbers" hidden>
+			
+			<h2>Bingo numbers:</h2>
+
+
+		</div>
+		<script>
+			const cardNumbersGenerator = () => {
+				let cardNumbers = [];
+				while (cardNumbers.length < 15) {
+					const randomNumber = Math.floor(Math.random() * 99);
+					if (!cardNumbers.includes(randomNumber) && randomNumber > 0) {
+						cardNumbers.push(randomNumber);
+					}
+				}
+				cardNumbers.sort((a, b) => a - b);
+				return cardNumbers;
+			}
+			const cardNumbers = cardNumbersGenerator();
+			
+			const generatePyramid = () => {
+				cardNumbersGenerator()
+				const assignCardNumbersToSquares = (cardNumbers) => {
+					const squareElements = document.getElementsByClassName('square');
+					for (let i = 0; i < squareElements.length; i++) {
+						squareElements[i].innerText = cardNumbers[i];
+					}
+				};
+				
+				assignCardNumbersToSquares(cardNumbers)
+				document.getElementById("bingoNumbers").hidden = false;
+				document.getElementById("generateBingoButton").hidden = false;
+
+			}
+			const generateBingo = () => {
+				document.getElementById("generatePyramidButton").hidden = true;
+				document.getElementById("generateBingoButton").hidden = true;
+				document.getElementById("playAgain").hidden = false;
+
+				const bingoNumbersGenerator = () => {
+					let bingoNumbers = [];
+					while (bingoNumbers.length < 30) {
+						const randomNumber = Math.floor(Math.random() * 99);
+						if (!bingoNumbers.includes(randomNumber) && randomNumber > 0) {
+							bingoNumbers.push(randomNumber);
+						}
+					}
+					return bingoNumbers;
+				};
+				const bingoNumbers = bingoNumbersGenerator();
+
+				const assignBingoNumbersToCircles = (bingoNumbers) => {
+					const bingoNumbersElement = document.getElementById('bingoNumbers');
+					for (let i = 0; i < bingoNumbers.length; i++) {
+
+						const circleElement = document.createElement('div');
+						circleElement.classList.add('circle');
+
+						const innerCircleElement = document.createElement('div');
+						innerCircleElement.classList.add('inner-circle');
+						
+						innerCircleElement.innerText = bingoNumbers[i];
+						innerCircleElement.style.backgroundColor = "white";
+						circleElement.appendChild(innerCircleElement);
+
+						circleElement.style.backgroundColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+						bingoNumbersElement.appendChild(circleElement);
+
+
+						
+
+	
+					}
+				}
+				
+				assignBingoNumbersToCircles(bingoNumbers)
+				const cardNumbers = cardNumbersGenerator();
+				checkResult(bingoNumbers, cardNumbers)
+			}
+
+
+			const checkResult = (bingoNumbers, cardNumbers) => {
+				const squareElements = document.getElementsByClassName('square');
+				for (let i=0; i<bingoNumbers.length; i++ ){
+					for (let j=0;j<cardNumbers.length; j++ ) {
+						if (bingoNumbers[i] === cardNumbers[j]) {	
+							squareElements[i].style.backgroundColor = "blue";
+						}
+					}
+				}
+				
+			}
+
+const playAgain = () => {
+    document.getElementById("playAgain").hidden = true;
+    document.getElementById("generatePyramidButton").hidden = false;
+    document.getElementById("bingoNumbers").hidden = true;
+
+    const clean = () => {
+        const squareElements = document.getElementsByClassName('square');
+        for (let i = 0; i < squareElements.length; i++) {
+            squareElements[i].innerText = "";
+            squareElements[i].style.backgroundColor = "";
+        }
+
+        const bingoNumbersElement = document.getElementById('bingoNumbers');
+        while (bingoNumbersElement.firstChild) {
+            bingoNumbersElement.firstChild.remove();
+        }
+    };
+
+    clean();
+};
+			
+
+
+			
+
+
+
+
+
+
+
+
+
+
+		</script>
+</body>
+
+</html>
